@@ -1,0 +1,16 @@
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://boriy816r2blq"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jexbf"]
+sky_top_color = Color(0.886886, 0.370785, 0.920467, 1)
+sky_horizon_color = Color(0.78151, 0.656624, 0.330236, 1)
+ground_bottom_color = Color(0.611437, 0.294419, 0.955609, 1)
+ground_horizon_color = Color(0.896435, 0.573738, 0.0935342, 1)
+
+[sub_resource type="Sky" id="Sky_dl050"]
+sky_material = SubResource("ProceduralSkyMaterial_jexbf")
+
+[resource]
+background_mode = 2
+sky = SubResource("Sky_dl050")
+ambient_light_color = Color(0.577008, 0.577008, 0.577008, 1)
+ambient_light_sky_contribution = 0.1
