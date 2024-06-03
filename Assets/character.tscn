@@ -12,5 +12,6 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_htdjy")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 2
 mesh = ExtResource("1_yd4an")
 skeleton = NodePath("../CollisionShape3D")

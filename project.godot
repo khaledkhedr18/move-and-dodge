@@ -63,6 +63,12 @@ ui_down={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="world"
+3d_physics/layer_2="player"
+3d_physics/layer_3="items"
+
 [rendering]
 
 environment/defaults/default_environment="res://new_environment.tres"
