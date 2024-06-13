@@ -1,43 +1,40 @@
 extends CharacterBody3D
-var charSpeed = 6
-var stop = 0
 
-func _ready():
-	pass
+const ROTSPEED = deg_to_rad(9)
+const SPEED = 9.0
+const JUMP_VELOCITY = 9
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
 func _physics_process(delta):
-	# this function is the main function for the game it contans the main controls and movement mechanics that we will
-	# be needing for this game
-	velocity = Vector3.ZERO
-	if Input.is_action_pressed("ui_right") and Input.is_action_pressed("ui_left"):
-		velocity.x = stop
-	elif Input.is_action_pressed("ui_right"):
-		velocity.x = charSpeed
-		$MeshInstance3D.rotate_y(deg_to_rad(8))
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta * 2
 
-		print("right arrow pressed and velocity is adjusted to ", velocity.x)
-	elif Input.is_action_pressed("ui_left"):
-		velocity.x = -charSpeed
-		$MeshInstance3D.rotate_y(deg_to_rad(-8))
+	# Handle jump.
+	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
 
-		print("left arrow pressed and velocity is adjusted to ", velocity.x)
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+		if Input.is_action_pressed("ui_left"):
+			$MeshInstance3D.rotate_y(-ROTSPEED)
+		if Input.is_action_pressed("ui_right"):
+			$MeshInstance3D.rotate_y(ROTSPEED)
+		if Input.is_action_pressed("ui_up"):
+			$MeshInstance3D.rotate_x(-ROTSPEED)
+		if Input.is_action_pressed("ui_down"):
+			$MeshInstance3D.rotate_x(ROTSPEED)
+
 	else:
-		lerp(velocity.x, 0.0, 0.1)
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
 
-	if Input.is_action_pressed("ui_up") and Input.is_action_pressed("ui_down"):
-		velocity.z = stop
-	elif Input.is_action_pressed("ui_up"):
-		velocity.z = -charSpeed
-		$MeshInstance3D.rotate_x(deg_to_rad(-8))
-
-		print("up arrow pressed and velocity is adjusted to ", velocity.z)
-	elif Input.is_action_pressed("ui_down"):
-		velocity.z = charSpeed
-		$MeshInstance3D.rotate_x(deg_to_rad(8))
-
-		print("down arrow pressed and velocity is adjusted to ", velocity.z)
-	lerp(velocity.z, 0.0, 0.1)
-	lerp(velocity.x, 0.0, 0.1)
-
-	move_and_collide(velocity * delta)
+	move_and_slide()
